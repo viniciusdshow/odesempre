@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=640, initial-scale=1.0">
+    <title>Contador de Dias Sem Acidentes</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 640px;
+            height: 256px;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            color: white;
+            background-color: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 10px;
+            width: 90%;
+            height: 80%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: #e0f7fa;
+            text-shadow: 1px 1px 3px #000;
+            margin: 0;
+        }
+
+        .date-time {
+            font-size: 1rem;
+            color: #b3e5fc;
+            text-shadow: 1px 1px 3px #000;
+            margin-bottom: 10px;
+        }
+
+        .counter {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #b3e5fc;
+            text-shadow: 2px 2px 5px #000;
+        }
+
+        .record {
+            font-size: 1rem;
+            color: #81d4fa;
+            margin-top: 5px;
+        }
+
+        .logo {
+            width: 100px;
+            height: 50px;
+            background-color: white;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="logo.png" alt="Logo" style="width: 100%; height: 100%;">
+        </div>
+
+        <div class="date-time" id="dateTime"></div>
+        
+        <h1>Contador de Dias Sem Acidentes</h1>
+
+        <div class="counter" id="daysCounter">0</div>
+        <div class="record" id="recordCounter">Recorde: 0 dias</div>
+    </div>
+
+    <script>
+        const startDate = '2022-12-20'; // Data inicial definida
+        let record = localStorage.getItem('record') ? parseInt(localStorage.getItem('record')) : 0;
+        let counting = true;
+
+        const daysCounter = document.getElementById('daysCounter');
+        const recordCounter = document.getElementById('recordCounter');
+        const dateTimeDisplay = document.getElementById('dateTime');
+
+        // Função para atualizar o contador de dias
+        function updateDaysCounter() {
+            if (!counting) return; // Não atualiza se não estiver contando
+            const now = new Date();
+            const elapsedDays = Math.floor((now - new Date(startDate)) / (1000 * 60 * 60 * 24));
+            daysCounter.textContent = elapsedDays >= 0 ? elapsedDays : 0;
+
+            if (elapsedDays > record) {
+                record = elapsedDays;
+                localStorage.setItem('record', record);
+            }
+
+            recordCounter.textContent = `Recorde: ${record} dias`;
+        }
+
+        // Função para atualizar a data e hora em tempo real
+        function updateDateTime() {
+            const now = new Date();
+            const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+            dateTimeDisplay.textContent = now.toLocaleString('pt-BR', options);
+        }
+
+        // Inicializar a página
+        updateDaysCounter(); // Atualiza os dias inicialmente
+        updateDateTime(); // Atualiza data e hora inicialmente
+
+        // Atualiza o contador a cada segundo
+        setInterval(updateDaysCounter, 1000);
+        setInterval(updateDateTime, 1000); // Atualiza data e hora a cada segundo
+    </script>
+</body>
+</html>
